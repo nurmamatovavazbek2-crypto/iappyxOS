@@ -1,4 +1,309 @@
-# iappyxOS
+package com.milliysertifikat.ustoz;
+
+import android.app.*;
+import android.os.*;
+import android.graphics.Color;
+import android.content.*;
+import android.view.*;
+import android.widget.*;
+import java.util.*;
+
+public class MainActivity extends Activity {
+
+    LinearLayout main;
+    TextView title;
+
+    String[] subjects = {
+        "📚 Tarix",
+        "➗ Matematika",
+        "🇬🇧 Ingliz tili",
+        "📖 Ona tili va adabiyot",
+        "⚗️ Kimyo",
+        "🧬 Biologiya",
+        "⚡ Fizika",
+        "🇷🇺 Rus tili",
+        "🇰🇷 Koreys tili",
+        "🇹🇷 Turk tili"
+    };
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        showHome();
+    }
+
+    void showHome() {
+        main = new LinearLayout(this);
+        main.setOrientation(LinearLayout.VERTICAL);
+        main.setPadding(30,30,30,30);
+        main.setBackgroundColor(Color.WHITE);
+
+        title = new TextView(this);
+        title.setText("🎓 MILLIY SERTIFIKAT USTOZ");
+        title.setTextSize(25);
+        title.setTextColor(Color.BLACK);
+        title.setGravity(Gravity.CENTER);
+        title.setPadding(10,20,10,30);
+
+        main.addView(title);
+
+        TextView subtitle = new TextView(this);
+        subtitle.setText(
+            "Milliy sertifikat imtihoniga tayyorgarlik platformasi"
+        );
+        subtitle.setTextSize(17);
+        subtitle.setGravity(Gravity.CENTER);
+        subtitle.setPadding(10,0,10,30);
+
+        main.addView(subtitle);
+
+        Button diagnostic = new Button(this);
+        diagnostic.setText("📝 Diagnostik test");
+        main.addView(diagnostic);
+
+        Button ai = new Button(this);
+        ai.setText("🤖 AI Ustoz");
+        main.addView(ai);
+
+        TextView fanTitle = new TextView(this);
+        fanTitle.setText("Fanlardan birini tanlang:");
+        fanTitle.setTextSize(20);
+        fanTitle.setTextColor(Color.BLACK);
+        fanTitle.setPadding(0,30,0,15);
+
+        main.addView(fanTitle);
+
+        for(String subject : subjects) {
+            Button b = new Button(this);
+            b.setText(subject);
+            b.setTextSize(17);
+
+            b.setOnClickListener(v -> showSubject(subject));
+
+            main.addView(b);
+        }
+
+        diagnostic.setOnClickListener(v -> startTest("📋 Diagnostik test"));
+
+        ai.setOnClickListener(v -> showAI());
+
+        setContentView(main);
+    }
+
+    void showSubject(String subject) {
+
+        main.removeAllViews();
+
+        TextView t = new TextView(this);
+        t.setText(subject);
+        t.setTextSize(26);
+        t.setTextColor(Color.BLACK);
+        t.setGravity(Gravity.CENTER);
+        t.setPadding(10,30,10,30);
+
+        main.addView(t);
+
+        String[] topics = {
+            "📌 1-mavzu",
+            "📌 2-mavzu",
+            "📌 3-mavzu",
+            "📝 Test ishlash",
+            "🎯 Imtihon rejimi"
+        };
+
+        for(String topic : topics) {
+
+            Button b = new Button(this);
+            b.setText(topic);
+            b.setTextSize(17);
+
+            b.setOnClickListener(v -> {
+
+                if(topic.contains("Test"))
+                    startTest(subject);
+
+                else if(topic.contains("Imtihon"))
+                    startTest("🎯 " + subject + " imtihon");
+
+                else
+                    lesson(subject, topic);
+            });
+
+            main.addView(b);
+        }
+
+        Button back = new Button(this);
+        back.setText("⬅️ Bosh sahifa");
+        back.setOnClickListener(v -> showHome());
+
+        main.addView(back);
+    }
+
+    void lesson(String subject, String topic) {
+
+        main.removeAllViews();
+
+        TextView t = new TextView(this);
+        t.setText(
+            subject + "\n\n" +
+            topic + "\n\n" +
+            "Bu bo‘limda mavzu bo‘yicha dars materiallari " +
+            "va tushuntirishlar joylashtiriladi."
+        );
+
+        t.setTextSize(20);
+        t.setTextColor(Color.BLACK);
+        t.setPadding(20,30,20,30);
+
+        main.addView(t);
+
+        Button test = new Button(this);
+        test.setText("📝 Shu mavzudan test");
+        test.setOnClickListener(v -> startTest(subject));
+
+        main.addView(test);
+
+        Button back = new Button(this);
+        back.setText("⬅️ Orqaga");
+        back.setOnClickListener(v -> showSubject(subject));
+
+        main.addView(back);
+    }
+
+    void startTest(String subject) {
+
+        main.removeAllViews();
+
+        TextView t = new TextView(this);
+        t.setText(
+            subject + "\n\n" +
+            "1-savol\n\n" +
+            "Quyidagi variantlardan to‘g‘ri javobni tanlang:"
+        );
+
+        t.setTextSize(20);
+        t.setTextColor(Color.BLACK);
+        t.setPadding(20,30,20,30);
+
+        main.addView(t);
+
+        String[] answers = {
+            "A) 1-variant",
+            "B) 2-variant",
+            "C) 3-variant",
+            "D) 4-variant"
+        };
+
+        for(String answer : answers) {
+
+            Button b = new Button(this);
+            b.setText(answer);
+
+            b.setOnClickListener(v -> {
+                result();
+            });
+
+            main.addView(b);
+        }
+    }
+
+    void result() {
+
+        main.removeAllViews();
+
+        TextView result = new TextView(this);
+
+        result.setText(
+            "🎉 TEST YAKUNLANDI!\n\n" +
+            "Natija: 1 / 1\n\n" +
+            "📊 To‘g‘ri javoblar: 1\n" +
+            "❌ Xatolar: 0\n\n" +
+            "Davom eting! Har kuni ozgina bo‘lsa ham " +
+            "o‘qish katta natija beradi."
+        );
+
+        result.setTextSize(21);
+        result.setTextColor(Color.BLACK);
+        result.setPadding(20,50,20,30);
+
+        main.addView(result);
+
+        Button home = new Button(this);
+        home.setText("🏠 Bosh sahifa");
+
+        home.setOnClickListener(v -> showHome());
+
+        main.addView(home);
+    }
+
+    void showAI() {
+
+        main.removeAllViews();
+
+        TextView title = new TextView(this);
+        title.setText("🤖 AI USTOZ");
+        title.setTextSize(27);
+        title.setGravity(Gravity.CENTER);
+        title.setTextColor(Color.BLACK);
+        title.setPadding(10,30,10,30);
+
+        main.addView(title);
+
+        TextView info = new TextView(this);
+        info.setText(
+            "Savolingizni yozing. AI Ustoz sizga " +
+            "mavzuni sodda qilib tushuntirishga yordam beradi."
+        );
+
+        info.setTextSize(18);
+        info.setTextColor(Color.BLACK);
+
+        main.addView(info);
+
+        EditText question = new EditText(this);
+        question.setHint("Savolingizni yozing...");
+        question.setMinLines(4);
+
+        main.addView(question);
+
+        Button send = new Button(this);
+        send.setText("📨 Yuborish");
+
+        main.addView(send);
+
+        TextView answer = new TextView(this);
+        answer.setTextSize(18);
+        answer.setTextColor(Color.BLACK);
+        answer.setPadding(10,30,10,30);
+
+        main.addView(answer);
+
+        send.setOnClickListener(v -> {
+
+            String q = question.getText().toString();
+
+            if(q.trim().isEmpty()) {
+                answer.setText("Iltimos, savolingizni yozing.");
+            } else {
+                answer.setText(
+                    "🤖 AI Ustoz:\n\n" +
+                    "Savolingiz qabul qilindi:\n\"" +
+                    q + "\"\n\n" +
+                    "Bu demo versiya. Keyingi bosqichda " +
+                    "haqiqiy AI xizmatini ulashimiz mumkin."
+                );
+            }
+        });
+
+        Button back = new Button(this);
+        back.setText("⬅️ Bosh sahifa");
+
+        back.setOnClickListener(v -> showHome());
+
+        main.addView(back);
+    }
+}
 
 **Generate real Android apps on your device — no server, no app store, no code.**
 
@@ -151,62 +456,4 @@ Generated apps access device hardware through a JavaScript bridge (`window.iappy
 | Widget | Home screen widgets with configurable grid layouts, clocks, timers, checkboxes, toggles |
 | Tasks | Scheduled background JS execution — fetch APIs, update widgets, send notifications while app is closed |
 | Triggers | Fire a JS callback when charger / headphones / Bluetooth / WiFi / Android Auto connects or disconnects. Optional persistent mode survives app swipe-away and reboot. |
-| Intent | Launch other installed apps (by package) or deep-link URIs. Enumerate installed apps for pickers. |
-| Capabilities | Query available bridges and permissions at runtime |
-
-## Building from source
-
-### Prerequisites
-- Android SDK
-- Flutter 3.x
-- Java 17+
-
-### Quick build
-```bash
-./build.sh
-# Output: bin/iappyxOS.apk (auto-installs if device connected)
-```
-
-### Manual build
-```bash
-# Shell APK (the template injected into generated apps):
-cd src/shell_apk && ./gradlew assembleRelease
-cp app/build/outputs/apk/release/app-release.apk ../container_app/assets/shell_template.apk
-
-# Container app (iappyxOS itself):
-cd src/container_app && flutter pub get && flutter build apk --release
-```
-
-> **Note:** Release builds require a signing keystore. Without `key.properties`, the build falls back to debug signing. See [Signing](#signing) below.
-
-### Signing
-
-The release APK is signed with a private keystore (not in this repo). To set up your own:
-
-```bash
-keytool -genkey -v -keystore iappyxos-release.jks -keyalg RSA -keysize 2048 -validity 10000 -alias iappyxos
-```
-
-Create `src/container_app/key.properties`:
-```
-storePassword=YOUR_PASSWORD
-keyPassword=YOUR_PASSWORD
-keyAlias=iappyxos
-storeFile=../../iappyxos-release.jks
-```
-
-Both files are gitignored. Never commit your keystore or passwords.
-
-## FAQ
-
-See [FAQ.md](FAQ.md) for answers to common questions — including the hard ones like "isn't this just a WebView wrapper?" and "why is it called OS?"
-
-## License
-
-MIT
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-## Support
-
-If you find iappyxOS useful, consider [buying me a coffee](https://ko-fi.com/iappyx).
+| Intent | Launch other installed apps (by package) or deep-link URIs. Enumerate installe
